@@ -7,7 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 import { db } from '../firebase/firebase';
-import { v4 as uuid } from "uuid";
 import { 
   arrayUnion,
   doc,
@@ -86,12 +85,19 @@ const CashEntry = ({navigation}) => {
         allbookDetails[bookIndex].cashOut=allbookDetails[bookIndex].cashOut+parseInt(entry.amount)
       }
       entry.currentBalance=allbookDetails[bookIndex].balance
+      console.log(user)
       await updateDoc(doc(db,"cashbooks",user.uid),{
         cashbooks:allbookDetails
       })
+      const randomId = () => {
+        return Math.random().toString(36).substr(2, 10);
+      };
+  
+      // Usage
+      const entryId = randomId();
        await updateDoc(doc(db, "entry", user.uid+bookId), {
           entry: arrayUnion({
-          id: uuid(),
+          id: entryId,
           entry:entry,
           date: date.toDateString(),
           time:timeString
@@ -106,15 +112,21 @@ const CashEntry = ({navigation}) => {
     }
   }
 
-  const handleDateChange = (event, selectedDate) => 
-  {
+  // const handleDateChange = (event, selectedDate) => 
+  // {
   
-  };
+  // };
  
   const handleTimePick=()=>
   {
         
   }
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  function handleDateChange(newDate) {
+    setSelectedDate(newDate);
+  }
+
   return (
     <>
 
@@ -294,9 +306,5 @@ const styles = StyleSheet.create({
         borderRadius:5,
         width:'30%',
         backgroundColor:'blue',
-       
-
     }
-
-
 })

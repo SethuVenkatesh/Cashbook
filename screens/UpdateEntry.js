@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { db } from '../firebase/firebase';
+import Popup from '../components/Popup';
 import { 
     arrayUnion,
     doc,
@@ -24,6 +25,7 @@ const UpdateEntry = ({navigation}) => {
     const [bookIndex,setbookIndex]=useState()
     const [allBooks,setallBooks]=useState()
     const [index,setIndex]=useState()
+    const [visible,setVisible]=useState(false)
 
   useEffect(() => {
     navigation.setOptions({
@@ -120,7 +122,14 @@ const UpdateEntry = ({navigation}) => {
       });
     navigation.goBack()
   }
-  const handleDelete=async ()=>{
+
+  const handleDelete=()=>{
+    setVisible(true)
+
+  }
+
+  const handleDeleteOk=async ()=>{
+
     let cashIn=0
     let cashOut=0
     let prevBalance=0
@@ -154,7 +163,12 @@ const UpdateEntry = ({navigation}) => {
   }
   return (
     <>
-    <View style={{flexDirection:'row',gap:10,margin:10}}>
+
+    {visible && <Popup setVisible={setVisible} callBack={handleDeleteOk}/> }
+    {
+      !visible && (
+        <>
+        <View style={{flexDirection:'row',gap:10,margin:10}}>
         {
             newentry.type =='cashIn' ? 
             (
@@ -282,6 +296,10 @@ const UpdateEntry = ({navigation}) => {
             <Text style={{fontWeight:'bold',color:'white',textTransform:'uppercase'}}>Update</Text>
         </TouchableOpacity>
     </View>
+    </>
+      )
+    }
+   
     </>
   )
 }

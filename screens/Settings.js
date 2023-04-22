@@ -4,6 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {signOut} from "firebase/auth"
 import { auth } from "../firebase/firebase";
+import Popup from "../components/Popup";
 export default function Settings(){
     const { user } = useContext(AuthContext);
     console.log("user",user)

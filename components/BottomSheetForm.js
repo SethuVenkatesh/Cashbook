@@ -4,7 +4,7 @@ import { useState,useContext } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {db} from '../firebase/firebase'
 import { AuthContext } from '../context/AuthContext';
-import { v4 as uuid } from "uuid";
+
 import { arrayUnion,
   doc,
   Timestamp,
@@ -16,7 +16,15 @@ const BottomSheetForm = ({refRBSheet,setcashBook,cashBook}) => {
   const {user}=useContext(AuthContext)
 
   const handleFormSubmit = async (name) => {
-    const bookId=uuid();
+    // Generate a random ID
+    const randomId = () => {
+      return Math.random().toString(36).substr(2, 10);
+    };
+
+    // Usage
+    const bookId = randomId();
+    console.log(bookId);
+
     if(name!==undefined){
         try{
           await updateDoc(doc(db, "cashbooks",user.uid), {

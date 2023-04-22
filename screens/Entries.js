@@ -38,8 +38,25 @@ const Entries = ({navigation}) => {
     const docSnap = await getDoc(docRef);
       if(docSnap.exists()){
         const allentry=docSnap.data().entry
-        setentryDetails(allentry)
+        if(allentry){
+          setentryDetails(allentry.sort((entry1,entry2)=>
+          {
+            const date1=new Date(Date.parse(entry2.date))
+            const date2=new Date(Date.parse(entry1.date))
+            var timeParts = entry2.time.split(":"); 
+            date1.setHours(timeParts[0]); // set the hours of the date to the first part of the time string
+            date1.setMinutes(timeParts[1]); // set the minutes of the date to the second part of the time string
+            date1.setSeconds(timeParts[2]);
+            var timeParts1 = entry1.time.split(":"); 
+            date2.setHours(timeParts1[0]); // set the hours of the date to the first part of the time string
+            date2.setMinutes(timeParts1[1]); // set the minutes of the date to the second part of the time string
+            date2.setSeconds(timeParts1[2]);
+            return date1.getTime()-date2.getTime() 
+          }))
+        }
+        // setentryDetails(allentry)
       }
+
   };
   useEffect(() => {
       onSnapshot(doc(db, "cashbooks", user.uid), (doc) => {
@@ -51,8 +68,26 @@ const Entries = ({navigation}) => {
       onSnapshot(doc(db, "entry", user.uid+bookId), (doc) => {
         if(doc.exists()){
           const allentry=doc.data().entry
-       
-          setentryDetails(allentry)
+          console.log(allentry)
+          if(allentry){
+
+            setentryDetails(allentry.sort((entry1,entry2)=>
+            {
+              const date1=new Date(Date.parse(entry2.date))
+              const date2=new Date(Date.parse(entry1.date))
+              var timeParts = entry2.time.split(":"); 
+              date1.setHours(timeParts[0]); // set the hours of the date to the first part of the time string
+              date1.setMinutes(timeParts[1]); // set the minutes of the date to the second part of the time string
+              date1.setSeconds(timeParts[2]);
+              var timeParts1 = entry1.time.split(":"); 
+              date2.setHours(timeParts1[0]); // set the hours of the date to the first part of the time string
+              date2.setMinutes(timeParts1[1]); // set the minutes of the date to the second part of the time string
+              date2.setSeconds(timeParts1[2]);
+              return date1.getTime()-date2.getTime() 
+            }))
+          }
+          // setentryDetails(allentry.sort((entry1,entry2)=>new Date(Date.parse(entry2.date)).getTime()-new Date(Date.parse(entry1.date)).getTime()))
+          // setentryDetails(allentry)
         } 
       });
 
